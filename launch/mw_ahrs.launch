@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- MW-AHRSv1 Driver -->
+  <node pkg="mw_ahrs_ros" type="mw_ahrs_driver_node" name="mw_ahrs_driver_node" output="screen">
+    <param name="port" value="/dev/ttyUSB0"/>
+    <param name="frame_id" value="imu_link"/>
+  </node>
+
+</launch>
