@@ -11,8 +11,8 @@ ROS driver package for MW-AHRSv1 and MW-AHRSv2U
 | Topic Name   | Type                             | Description           |
 |--------------|----------------------------------|-----------------------|
 | ``imu/data`` | ``sensor_msgs/Imu``              | IMU data              |
-| ``imu/rpy``  | ``geometry_msgs/Vector3Stamped`` | Roll, Pitch, Yaw data |
-| ``imu/mag``  | ``sensor_msgs/MagneticField``    | Magnetic field data   |
+| ``imu/rpy``  | ``geometry_msgs/Vector3Stamped`` | roll, pitch, yaw data |
+| ``imu/mag``  | ``sensor_msgs/MagneticField``    | magnetic field data   |
 
 | Service Name  | Type             | Description      |
 |---------------|------------------|------------------|
