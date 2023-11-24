@@ -19,7 +19,6 @@ ROS driver package for MW-AHRSv1 and MW-AHRSv2U
 | ``imu/reset`` | ``std_srvs/Trigger`` | Reset the sensor |
 
 ## Installation
-
 ```
 cd ~/catkin_ws/src/
 git clone https://github.com/roasinc/mw_ahrs_ros.git
