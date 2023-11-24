@@ -1,31 +1,36 @@
-MW-AHRSv1 ROS Driver
-===============================
+# mw_ahrs_ros
+[![Licence](https://img.shields.io/badge/License-BSD--3-green.svg)](https://opensource.org/license/bsd-3-clause/)
+[![ubuntu20](https://img.shields.io/badge/-UBUNTU_20.04-orange?style=flat-square&logo=ubuntu&logoColor=white)](https://releases.ubuntu.com/focal/)
+[![noetic](https://img.shields.io/badge/-NOETIC-blue?style=flat-square&logo=ros)](https://wiki.ros.org/noetic)
 
-Overview
---------
+## Overview
+ROS driver package for MW-AHRSv1 and MW-AHRSv2U
 
-ROS driver for MW-AHRSv1 sensor
+## ROS Interface
 
-ROS Interface
------------
-
-| Topic Name   | Type                             | Description             |
-|--------------|----------------------------------|-------------------------|
-| ``imu/data`` | ``sensor_msgs/Imu``              | IMU values              |
-| ``imu/rpy``  | ``geometry_msgs/Vector3Stamped`` | Roll, Pitch, Yaw values |
-| ``imu/mag``  | ``sensor_msgs/MagneticField``    | Magnetic Field values   |
+| Topic Name   | Type                             | Description           |
+|--------------|----------------------------------|-----------------------|
+| ``imu/data`` | ``sensor_msgs/Imu``              | IMU data              |
+| ``imu/rpy``  | ``geometry_msgs/Vector3Stamped`` | Roll, Pitch, Yaw data |
+| ``imu/mag``  | ``sensor_msgs/MagneticField``    | Magnetic field data   |
 
 | Service Name  | Type             | Description      |
 |---------------|------------------|------------------|
-| ``imu/reset`` | ``mi_ros/Reset`` | Reset the sensor |
+| ``imu/reset`` | ``std_srvs/Trigger`` | Reset the sensor |
 
-Installation
-------------
+## Installation
 
 ```
 cd ~/catkin_ws/src/
 git clone https://github.com/roasinc/mw_ahrs_ros.git
+
 cd ~/catkn_ws/
 rosdep install --from-paths src --ignore-src -y
 catkin_make
+```
+
+## Usage
+```
+sudo chmod 666 /dev/ttyUSB0
+roslaunch mw_ahrs_ros mw_ahrs.launch
 ```

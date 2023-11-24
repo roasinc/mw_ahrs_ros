@@ -33,11 +33,12 @@ const string eol("\n");
 const size_t max_line_length(128);
 
 MwAhrsDriver::MwAhrsDriver(ros::NodeHandle& nh, ros::NodeHandle& nh_priv)
-  : nh_(nh), nh_priv_(nh_priv), port_("/dev/ttyUSB0"), baud_(115200), rate_(50.0), frame_id_("imu_link")
+  : nh_(nh), nh_priv_(nh_priv), port_("/dev/ttyUSB0"), baud_(115200), rate_(50.0), frame_id_("imu_link"), version_("v2")
 {
   nh_priv_.getParam("port", port_);
   nh_priv_.getParam("baud", baud_);
   nh_priv_.getParam("frame_id", frame_id_);
+  nh_priv_.getParam("version", version_);
 }
 
 MwAhrsDriver::~MwAhrsDriver()
@@ -49,11 +50,14 @@ bool MwAhrsDriver::init()
 {
   srv_reset_ = nh_.advertiseService("reset", &MwAhrsDriver::reset, this);
 
-  rp_rpy_.init(nh_, "rpy", 1);
-  rp_rpy_.msg_.header.frame_id = frame_id_;
-
   rp_imu_.init(nh_, "data", 1);
   rp_imu_.msg_.header.frame_id = frame_id_;
+  rp_imu_.msg_.orientation_covariance = { 0.0025, 0, 0, 0, 0.0025, 0, 0, 0, 0.0025 };
+  rp_imu_.msg_.angular_velocity_covariance = { 0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02 };
+  rp_imu_.msg_.linear_acceleration_covariance = { 0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04 };
+
+  rp_rpy_.init(nh_, "rpy", 1);
+  rp_rpy_.msg_.header.frame_id = frame_id_;
 
   rp_mag_.init(nh_, "mag", 1);
   rp_mag_.msg_.header.frame_id = frame_id_;
@@ -108,7 +112,13 @@ void MwAhrsDriver::read()
       tok = strtok(nullptr, " ");
     }
 
-    if (cnt == 12)
+    int num = 0;
+    if (version_ == "v1")
+      num = 12;
+    else if (version_ == "v2")
+      num = 14;
+
+    if (cnt == num)
     {
       rp_rpy_.msg_.vector.x = stod(data[6]) * M_PI / 180.0;
       rp_rpy_.msg_.vector.y = stod(data[7]) * M_PI / 180.0;
@@ -143,20 +153,12 @@ void MwAhrsDriver::start()
   serial_.write(frequency);
 }
 
-bool MwAhrsDriver::reset(mw_ahrs_ros::Reset::Request& req, mw_ahrs_ros::Reset::Response& resp)
+bool MwAhrsDriver::reset(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& resp)
 {
-  if (req.reset == true)
-  {
-    string msg = "rst\n";
-    serial_.write(msg);
-
-    this_thread::sleep_for(chrono::milliseconds(1000));
-    start();
-
-    resp.result = true;
-  }
-  else
-    resp.result = false;
+  string msg = "rst\n";
+  serial_.write(msg);
+  this_thread::sleep_for(chrono::milliseconds(1000));
+  start();
 
   return true;
 }

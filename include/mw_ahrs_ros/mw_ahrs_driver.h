@@ -34,7 +34,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <cmath>
 #include <thread>
-#include <chrono>
 
 #include "ros/ros.h"
 #include "tf/transform_datatypes.h"
@@ -43,7 +42,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "geometry_msgs/Vector3Stamped.h"
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/MagneticField.h"
-#include "mw_ahrs_ros/Reset.h"
+#include "std_srvs/Trigger.h"
 
 using namespace std;
 
@@ -74,7 +73,7 @@ public:
    * \param req Request
    * \param resp Response
    */
-  bool reset(mw_ahrs_ros::Reset::Request& req, mw_ahrs_ros::Reset::Response& resp);
+  bool reset(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& resp);
 
   /**
    * \brief Publish IMU sensor data
@@ -87,8 +86,8 @@ private:
   ros::NodeHandle nh_priv_;
   ros::ServiceServer srv_reset_;
 
-  realtime_tools::RealtimePublisher<geometry_msgs::Vector3Stamped> rp_rpy_;
   realtime_tools::RealtimePublisher<sensor_msgs::Imu> rp_imu_;
+  realtime_tools::RealtimePublisher<geometry_msgs::Vector3Stamped> rp_rpy_;
   realtime_tools::RealtimePublisher<sensor_msgs::MagneticField> rp_mag_;
 
   /// For serial communication
@@ -101,6 +100,9 @@ private:
 
   /// Frame ID
   string frame_id_;
+
+  /// Sensor version
+  string version_;
 };
 
 #endif  // MW_AHRS_ROS__MW_AHRS_DRIVER_H_
