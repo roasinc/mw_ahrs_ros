@@ -30,6 +30,9 @@ catkin_make
 
 ## Usage
 ```
-sudo chmod 666 /dev/ttyUSB0
+sudo cp rules/99-mwahrs.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
 roslaunch mw_ahrs_ros mw_ahrs.launch
 ```
